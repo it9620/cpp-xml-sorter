@@ -1,0 +1,63 @@
+.DS_Store
+.vscode
+.editorconfig
+
+transport-catalogue/tests/old_tests
+files/input/*
+files/output/*
+lib/*/docs
+
+output.json
+build
+*.code-workspace
+tsC_case1_input.txt
+tsC_case1_output1.txt
+tsC_case1_MyOutput.txt
+input.json
+output.js
+output_example.json
+output_first.json
+output_second.json
+output_third.json
+output_fourth.json
+output_sava.json
+output.svg
+output_program_fall.json
+output_opentest3.json
+output_opentest2.json
+output_opentest1.json
+transport_catalogue.db
+
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
