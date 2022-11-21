@@ -9,26 +9,21 @@
 
 using namespace std;
 
-bool XMLNodeIndexComp(pugi::xml_named_node_iterator lhs, pugi::xml_named_node_iterator rhs) {
-    pugi::xml_node lhs_index_node = lhs->child("Index");
-        pugi::xml_node rhs_index_node = rhs->child("Index");
-        if (!lhs_index_node || !rhs_index_node) {
-            return false;
-        }
-        return stoi(lhs_index_node.child_value()) < stoi(rhs_index_node.child_value());
-}
+//===================================================================================
 
 int main()
 {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(
-        "/Users/maymac2/vscode/CppXMLSorter/files/input/witsmlTable.xml");
+        "files/input/parameters_servertools-mlsystem_witsmlTable_before_march22 (2).xml");
+        //"files/input/params_srvtools-mlsystem_witsmlTable_march22 (2).xml");
     if (!result)
         return -1;
 
     auto array_of_chanel = doc.child("ArrayOfChannel");
     auto chldrn = array_of_chanel.children("Channel");
 
+    // Read and save atribute list.
     vector<string> array_atributes_names;
     vector<string> array_atributes;
     for (const auto& atribute : array_of_chanel.attributes()) {
@@ -36,17 +31,7 @@ int main()
         array_atributes.push_back(atribute.as_string());        
     }
 
-    //pugi::sort(chldrn.begin(), chldrn.end(), XMLNodeIndexComp);
-    /*pugi::sort(chldrn.begin(), chldrn.end(), [](auto& lhs, auto& rhs) {
-        //return (lhs.child("Index")) < (rhs.child("Index"));
-        pugi::xml_node lhs_index_node = lhs.child("Index");
-        pugi::xml_node rhs_index_node = rhs.child("Index");
-        if (!lhs_index_node || !rhs_index_node) {
-            return false;
-        }
-        return stoi(lhs_index_node.child_value()) < stoi(rhs_index_node.child_value());
-    });*/
-
+    // Make map instead sort function.
     map<int, pugi::xml_named_node_iterator> sorted_xml;
     auto it = chldrn.begin();
     while (it != chldrn.end()) {
@@ -58,46 +43,30 @@ int main()
     } // */
     cout << "Map created." << endl;
 
-    //===================================================================================
-    // Work to save modified XML file.
-    
+//===================================================================================
+// Work to save modified XML file.
+
     pugi::xml_document result_doc;
     result_doc.append_child("ArrayOfChannel");
 
     pugi::xml_node result_array_of_chanel = result_doc.child("ArrayOfChannel");
 
+    // Set atributes to ArrayOfChanel.
     for (int i = 0; i < array_atributes.size(); ++i) {
         string str_name = array_atributes_names.at(i);
-        //pugi::char_t* name;
-
-        //result_array_of_chanel.append_attribute(name);
-
         string str_atribute = array_atributes.at(i);
-        pugi::xml_attribute atribute;
-        atribute.set_name(str_name.c_str());
-        atribute.set_value(str_atribute.c_str());
-
-        //result_array_of_chanel.append_attribute(atribute);
-
-        //atribute = str_atribute;
-        result_array_of_chanel.attribute(str_name.c_str()).set_value(atribute);
+        result_array_of_chanel.append_attribute(str_name.c_str()) = str_atribute.c_str();
     }
-    
-    result_array_of_chanel.append_child("Chanel");
-    //result_array_of_chanel.set_name("ArrayOfChannel");
     
     for (const auto& [index, node] : sorted_xml) {
         pugi::xml_node tmp_node = *node;
-        //result_array_of_chanel.insert_child_after("Chanel", tmp_node);
         result_array_of_chanel.append_copy(tmp_node);
-        //result_array_of_chanel.append_child("Chanel", tmp_node);
     }
-    //result_doc.insert_child_after("ArrayOfChannel",result_array_of_chanel);
 
-    result_doc.save_file("/Users/maymac2/vscode/CppXMLSorter/files/output/result.xml");
-
+    result_doc.save_file(
+        "files/output/parameters_servertools-mlsystem_witsmlTable_before_march22_sorted.xml");
+        //"files/output/params_srvtools-mlsystem_witsmlTable_march22_sorted.xml");
 
     cout << "Programm end." << endl;
-
     return 0;
 }
